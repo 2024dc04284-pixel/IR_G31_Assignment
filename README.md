@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # IR – Group G31
 
 ### Setup & Run
@@ -21,7 +20,3 @@ The app runs at http://localhost:8501
 
 ### Dataset
 `dataset.txt` – 25 IR/NLP-domain sentences (used when no files are uploaded)
-=======
-# IR_G31_Assignment
-Information retrival assignment 1 
->>>>>>> e767ed716a61e720f0320ae5aab106a32edc4866
