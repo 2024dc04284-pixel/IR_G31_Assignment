@@ -1,1 +1,25 @@
-Information Retrieval is the process of obtaining relevant information from a collection of documents.
+Information Retrieval is the process of obtaining relevant information from a large collection of documents based on user queries.
+Search engines use advanced information retrieval techniques to index and retrieve web pages efficiently.
+Natural Language Processing enables computers to understand and process human language for various applications.
+Text preprocessing includes tokenization, stop-word removal, stemming, and lemmatization to normalize text data.
+The inverted index is a fundamental data structure used in information retrieval systems for fast query processing.
+Boolean retrieval models allow users to combine search terms using AND, OR, and NOT operators.
+Vector space models represent documents and queries as vectors in a high-dimensional space.
+TF-IDF weighting scheme measures the importance of a term in a document relative to a collection.
+Phrase queries require exact matching of consecutive words in the correct order within documents.
+Wildcard queries allow users to search for terms with unknown characters using patterns like wild* or *card.
+Spell correction algorithms help handle typographical errors and suggest alternative query terms.
+Edit distance measures the minimum number of single-character edits required to change one word into another.
+K-gram indexing supports efficient wildcard query processing by breaking terms into overlapping character sequences.
+Binary search trees provide efficient searching and insertion operations with O(log n) average time complexity.
+B-trees are balanced tree structures used in databases and file systems for efficient storage and retrieval.
+Positional indexes store the position of each term in documents enabling phrase and proximity query processing.
+Biword indexes create index entries for pairs of consecutive words to support two-word phrase queries.
+Machine learning algorithms improve search relevance through training on user feedback and click-through data.
+Document clustering groups similar documents together based on their content similarity measures.
+Information extraction identifies and extracts structured information from unstructured text documents.
+Relevance feedback allows users to improve search results by marking documents as relevant or non-relevant.
+PageRank algorithm measures the importance of web pages based on the number and quality of incoming links.
+Crawlers systematically browse the web to collect and index web pages for search engine databases.
+Indexing involves creating data structures that allow for quick location of information within documents.
+Query expansion adds related terms to the original query to improve recall in information retrieval systems.
