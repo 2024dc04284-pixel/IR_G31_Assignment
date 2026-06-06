@@ -1,6 +1,6 @@
-# IR – Group G31
+# IR System – Group G31
 
-### Setup & Run
+## Setup
 
 ```bash
 pip install -r requirements.txt
@@ -8,15 +8,18 @@ python -m nltk.downloader stopwords wordnet punkt
 streamlit run app.py
 ```
 
-The app runs at http://localhost:8501
+## Usage
+1. Upload the `.txt` files from the `docs/` folder via the app's upload widget
+2. The app processes only uploaded files — nothing runs without uploads
+3. Use the sidebar to toggle preprocessing options
 
-### Features
-- **Section A** – Upload multiple TXT files (falls back to built-in dataset)
-- **Section B** – Tokenization, lowercasing, stopword removal, hyphen handling, stemming vs lemmatization comparison with inverted index
-- **Section C** – Phrase query using Biword Index and Positional Index with false-positive analysis
-- **Section D** – Dictionary search via custom BST and B-Tree with performance benchmarks
-- **Section E** – Tolerant retrieval: wildcard queries, k-gram index, edit distance, spell correction, Soundex
-- **Section G** – Full inference and discussion report
+## Suggested query terms per section
 
-### Dataset
-`dataset.txt` – 25 IR/NLP-domain sentences (used when no files are uploaded)
+**B – Preprocessing:** `blood`, `patients`, `prescribed`, `infections`
+**C – Phrase Queries:** `coronary artery`, `blood glucose monitoring`, `intensive care unit`
+**D – Dictionary:** `surgery`, `dialysis`, `biopsy`, `ventilator`, `xray`
+**E – Tolerant Retrieval:**
+  - Wildcard: `cardio*`, `*ology`, `*gram*`
+  - Spell: `surgerey`, `anasthesia`, `diognosis`
+  - Edit distance: `phamracy` vs `pharmacy`
+  - K-gram: `anti` (k=2)
