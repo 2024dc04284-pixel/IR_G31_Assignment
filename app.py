@@ -26,15 +26,15 @@ _lemmatizer = WordNetLemmatizer()
 _stopwords  = set(stopwords.words("english"))
 
 
-def preprocess(text, lowercase=True, remove_stops=True, handle_hyphen=True,
+def preprocess(text, lowercase=True, remove_stops=True, handle_hyphen=True, 
                stem=False, lemmatize=False):
     if handle_hyphen:
         text = re.sub(r"(\w)-(\w)", r"\1 \2", text)
     if lowercase:
         text = text.lower()
-    tokens = re.findall(r"\b[a-z]+\b", text)
+    tokens = re.findall(r"\b[a-zA-Z]+\b", text)
     if remove_stops:
-        tokens = [t for t in tokens if t not in _stopwords]
+        tokens = [t for t in tokens if t.lower() not in _stopwords]
     if stem:
         tokens = [_stemmer.stem(t) for t in tokens]
     elif lemmatize:
@@ -90,7 +90,33 @@ if do_stem and do_lemma:
 def preprocess_with_sidebar(text):
     return preprocess(text, do_lower, do_stops, do_hyphen, do_stem, do_lemma)
 
+# ════════════════════════════════════════════════════════════════════════════
+# GENERAL SEARCH
+# ════════════════════════════════════════════════════════════════════════════
+st.header("General Search")
+st.write("Search across all documents using the preprocessing options set in the sidebar.")
 
+gen_q = st.text_input("Enter your search query", placeholder="e.g. blood glucose monitoring")
+if gen_q.strip():
+    q_tokens = preprocess_with_sidebar(gen_q.strip())
+    results  = []
+    for doc in documents:
+        doc_tokens = set(preprocess_with_sidebar(doc["content"]))
+        matched    = [t for t in q_tokens if t in doc_tokens]
+        if matched:
+            score = len(matched) / max(len(q_tokens), 1)
+            results.append({"doc": doc, "score": score, "matched": matched})
+    results.sort(key=lambda x: -x["score"])
+    if results:
+        st.success(f"Found {len(results)} matching document(s).")
+        for r in results:
+            with st.expander(f"{r['doc']['name']}  -  {r['score']:.0%} match"):
+                st.write(r["doc"]["content"])
+                st.caption(f"Matched terms: {', '.join(r['matched'])}")
+    else:
+        st.error("No documents matched your query.")
+
+st.markdown("---")
 # ════════════════════════════════════════════════════════════════════════════
 # SECTION B – Text Preprocessing
 # ════════════════════════════════════════════════════════════════════════════
@@ -116,11 +142,11 @@ steps["2. After Hyphen Handling"] = re.sub(r"(\w)-(\w)", r"\1 \2", sample_txt) i
 steps["3. After Lowercasing"] = steps["2. After Hyphen Handling"].lower() if do_lower else steps["2. After Hyphen Handling"]
 
 # Step 4: tokenize
-raw_tokens = re.findall(r"\b[a-z]+\b", steps["3. After Lowercasing"])
+raw_tokens = re.findall(r"\b[a-zA-Z]+\b", steps["3. After Lowercasing"])
 steps["4. Tokens"] = raw_tokens
 
 # Step 5: stopword removal
-filtered = [t for t in raw_tokens if t not in _stopwords] if do_stops else raw_tokens
+filtered = [t for t in raw_tokens if t.lower() not in _stopwords] if do_stops else raw_tokens
 steps["5. After Stopword Removal"] = filtered
 
 col1, col2 = st.columns(2)
@@ -306,7 +332,7 @@ with st.expander("📊 Comparison & Inference"):
 | Accuracy             | Lower                               | Higher                               |
 
 **Why Biword can give false positives:**
-Query: *"coronary artery bypass"* → splits into bigrams *"coronary artery"* and *"artery bypass"*.
+Query: *"blood pressure monitor"* → splits into bigrams *"blood pressure"* and *"pressure monitor"*.
 A document containing these bigrams in different sentences would incorrectly match.
 
 **Why Positional is more accurate:**
@@ -542,7 +568,7 @@ def soundex(word):
 
 kg_index = build_kgram_index(all_terms, k=2)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Wildcard", "Spell Correction", "Edit Distance", "K-gram Index"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Wildcard", "Spell Correction", "Edit Distance", "K-gram Index", "Phonetic Correction"])
 
 with tab1:
     st.subheader("Wildcard Query")
@@ -603,6 +629,49 @@ with tab4:
             if shared:
                 st.markdown(f"- `{kg}` → {', '.join(shared)}")
 
+with tab5:
+    st.subheader("Phonetic Correction (Soundex)")
+    st.write(
+        "Soundex groups words that sound alike even if they are spelled differently. "
+        "Useful for handling pronunciation-based spelling errors."
+    )
+
+    phonetic_word = st.text_input(
+        "Enter a word for phonetic matching",
+        "surgery"
+    )
+
+    if phonetic_word.strip():
+        query = phonetic_word.strip().lower()
+        query_code = soundex(query)
+
+        matches = [
+            term for term in all_terms
+            if soundex(term) == query_code
+        ]
+
+        st.markdown(f"**Soundex Code:** `{query_code}`")
+
+        if matches:
+            st.success(
+                f"Found {len(matches)} phonetically similar term(s):"
+            )
+
+            result_rows = []
+            for term in sorted(matches):
+                result_rows.append({
+                    "Term": term,
+                    "Soundex": soundex(term),
+                    "Documents": ", ".join(inv_index.get(term, []))
+                })
+
+            st.dataframe(
+                pd.DataFrame(result_rows),
+                use_container_width=True
+            )
+        else:
+            st.warning("No phonetic matches found.")
+
 with st.expander("Tolerant Retrieval – Summary & Inference"):
     st.markdown("""
 | Technique          | How it works                                          | Effectiveness                 |
@@ -622,33 +691,7 @@ with st.expander("Tolerant Retrieval – Summary & Inference"):
 
 st.markdown("---")
 
-# ════════════════════════════════════════════════════════════════════════════
-# GENERAL SEARCH
-# ════════════════════════════════════════════════════════════════════════════
-st.header("General Search")
-st.write("Search across all documents using the preprocessing options set in the sidebar.")
 
-gen_q = st.text_input("Enter your search query", placeholder="e.g. blood glucose monitoring")
-if gen_q.strip():
-    q_tokens = preprocess_with_sidebar(gen_q.strip())
-    results  = []
-    for doc in documents:
-        doc_tokens = set(preprocess_with_sidebar(doc["content"]))
-        matched    = [t for t in q_tokens if t in doc_tokens]
-        if matched:
-            score = len(matched) / max(len(q_tokens), 1)
-            results.append({"doc": doc, "score": score, "matched": matched})
-    results.sort(key=lambda x: -x["score"])
-    if results:
-        st.success(f"Found {len(results)} matching document(s).")
-        for r in results:
-            with st.expander(f"{r['doc']['name']}  -  {r['score']:.0%} match"):
-                st.write(r["doc"]["content"])
-                st.caption(f"Matched terms: {', '.join(r['matched'])}")
-    else:
-        st.error("No documents matched your query.")
-
-st.markdown("---")
 
 # ════════════════════════════════════════════════════════════════════════════
 # SECTION G – Inference & Discussion
