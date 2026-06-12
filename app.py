@@ -214,8 +214,8 @@ st.info("""
 - **Lemmatization** maps words to valid dictionary base forms (e.g. *prescribed* → *prescribe*, *injuries* → *injury*).
   It preserves meaning and is better suited for medical/domain-specific text.
 
-- **Conclusion:** For this hospital dataset, **Lemmatization is preferred** because medical terms must remain readable and precise.
-  Stemming distorts terms like *anesthesia* → *anesthesia* or *diagnoses* → *diagnos*, hurting accuracy.
+- **Conclusion:** Based on the vocabulary-reduction and term-preservation shown above, lemmatization appears preferable for this dataset.
+  Stemming distorts terms like *prescribed* → *prescrib* or *diagnoses* → *diagnos*, hurting accuracy.
 """)
 
 st.markdown("---")
@@ -707,7 +707,7 @@ Lemmatization then normalizes variants like *prescribing* → *prescribe* and *i
 ---
 ### 2. Was Stemming or Lemmatization better for this dataset?
 **Lemmatization is better** for the hospital dataset.
-Medical vocabulary must remain intact - stemming distorts terms like *diagnoses* → *diagnos* and *anesthesia* → *anesthesia* unpredictably.
+Medical vocabulary must remain intact - stemming distorts terms like *diagnoses* → *diagnos* and *prescribed* → *prescrib* unpredictably.
 Lemmatization preserves valid medical base forms, making retrieval more precise and readable.
 
 ---
