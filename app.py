@@ -17,7 +17,7 @@ for pkg in ["stopwords", "wordnet", "punkt"]:
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="IR System – G31", layout="wide")
-st.title("Group 31 - IR Assgn 1 – Hospital Domain")
+st.title("Group 31 - IR Assignment 1 – Hospital Domain Documents")
 st.markdown("---")
 
 # ── Shared NLP objects ────────────────────────────────────────────────────────
