@@ -2,6 +2,8 @@
 
 ## Setup
 
+git clone https://github.com/2024dc04284-pixel/IR_G31_Assignment.git
+
 ```bash
 pip install -r requirements.txt
 python -m nltk.downloader stopwords wordnet punkt
@@ -16,10 +18,11 @@ streamlit run app.py
 ## Suggested query terms per section
 
 **B – Preprocessing:** `blood`, `patients`, `prescribed`, `infections`
-**C – Phrase Queries:** `coronary artery`, `blood glucose monitoring`, `intensive care unit`
+**C – Phrase Queries:** `blood glucose monitoring`, `intensive care unit`
 **D – Dictionary:** `surgery`, `dialysis`, `biopsy`, `ventilator`, `xray`
 **E – Tolerant Retrieval:**
   - Wildcard: `cardio*`, `*ology`, `*gram*`
   - Spell: `surgerey`, `anasthesia`, `diognosis`
   - Edit distance: `phamracy` vs `pharmacy`
   - K-gram: `anti` (k=2)
+  - Phonetics: `Surjuree`
