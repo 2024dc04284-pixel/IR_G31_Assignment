@@ -729,6 +729,7 @@ Very tolerant across all four mechanisms:
 - **Spell correction (k-gram + edit distance):** Correctly recovered from 1–2 character typos in all test cases.
 - **Edit distance:** Exact Levenshtein calculation; ranked dictionary terms correctly by similarity.
 - **K-gram index:** Efficiently reduced the candidate space before expensive edit distance computation.
+- **Phonetics:** Efficiently retrieved similar pronunciation terms.           
 
 ---
 ### 6. Limitations of the system
